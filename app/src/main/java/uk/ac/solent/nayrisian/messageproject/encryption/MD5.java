@@ -1,4 +1,4 @@
-package uk.ac.solent.nayrisian.messageproject.encrypt;
+package uk.ac.solent.nayrisian.messageproject.encryption;
 
 import android.support.annotation.NonNull;
 
