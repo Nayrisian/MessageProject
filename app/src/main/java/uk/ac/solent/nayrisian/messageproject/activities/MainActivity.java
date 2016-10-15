@@ -6,10 +6,8 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.widget.Toast;
 
 import uk.ac.solent.nayrisian.messageproject.R;
-import uk.ac.solent.nayrisian.messageproject.encryption.MD5;
 
 public class MainActivity extends AppCompatActivity {
     @Override
@@ -27,10 +25,5 @@ public class MainActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
-
-        String hash1 = MD5.hash("Hello");
-        Toast.makeText(this, hash1, Toast.LENGTH_LONG).show();
-        String hash2 = MD5.hash("Hello");
-        Toast.makeText(this, hash2, Toast.LENGTH_LONG).show();
     }
 }
