@@ -1,4 +1,6 @@
-package uk.ac.solent.nayrisian.messageproject.Encryption;
+package uk.ac.solent.nayrisian.messageproject.encryption;
+
+import android.support.annotation.NonNull;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -9,17 +11,23 @@ import java.security.NoSuchAlgorithmException;
  */
 
 public class MD5 {
-    private static String md5(String s) {
+    @NonNull
+    public static String hash(final String s) {
+        final String MD5 = "MD5";
         try {
             // Create MD5 Hash
-            MessageDigest digest = java.security.MessageDigest.getInstance("MD5");
+            MessageDigest digest = java.security.MessageDigest
+                    .getInstance(MD5);
             digest.update(s.getBytes());
             byte messageDigest[] = digest.digest();
-
             // Create Hex String
-            StringBuffer hexString = new StringBuffer();
-            for (int i=0; i<messageDigest.length; i++)
-                hexString.append(Integer.toHexString(0xFF & messageDigest[i]));
+            StringBuilder hexString = new StringBuilder();
+            for (byte aMessageDigest : messageDigest) {
+                String h = Integer.toHexString(0xFF & aMessageDigest);
+                while (h.length() < 2)
+                    h = "0" + h;
+                hexString.append(h);
+            }
             return hexString.toString();
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
