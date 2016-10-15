@@ -1,9 +1,8 @@
-package uk.ac.solent.nayrisian.messageproject;
+package uk.ac.solent.nayrisian.messageproject.activities;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
@@ -34,6 +33,8 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import uk.ac.solent.nayrisian.messageproject.R;
 
 import static android.Manifest.permission.READ_CONTACTS;
 
@@ -320,7 +321,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             for (String credential : DUMMY_CREDENTIALS) {
                 String[] pieces = credential.split(":");
                 if (pieces[0].equals(mEmail)) {
-                    // Account exists, return true if the password matches.
+                    // Accounts exists, return true if the password matches.
                     return pieces[1].equals(mPassword);
                 }
             }

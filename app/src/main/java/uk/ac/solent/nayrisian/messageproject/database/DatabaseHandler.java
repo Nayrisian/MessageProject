@@ -6,7 +6,14 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import uk.ac.solent.nayrisian.messageproject.database.tables.Accounts;
+
+import static uk.ac.solent.nayrisian.messageproject.database.tables.Accounts.*;
+import static uk.ac.solent.nayrisian.messageproject.database.tables.Messages.*;
+
 /**
+ * Singleton handler of the SQLite Android database system.
+ * TODO: Create a separate SQLite handler system externally.
  * Created by Nayrisian on 09/10/2016.
  */
 
@@ -14,20 +21,10 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public static final int DATABASE_VERSION = 1;
     public static final String DATABASE_NAME = "ams.db";
 
-    public static final String TABLE_ACCOUNTS = "accounts";
-    public static final String COLUMN_USERID = "_id";
-    public static final String COLUMN_USERNAME = "username";
-    public static final String COLUMN_PASSWORD = "password"; // Will be hashed??
 
-    public static final String TABLE_MESSAGES = "messages";
-    public static final String COLUMN_MESSAGEID = "_id";
-    public static final String COLUMN_MESSAGE = "message";
-    public static final String COLUMN_SENDER = "sender";
-    public static final String COLUMN_RECEIVER = "receiver";
-    public static final String COLUMN_TIME = "time";
 
     public DatabaseHandler(Context context) {
-        super(context, DATABASE_NAME, /*factory*/null, DATABASE_VERSION);
+        super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
     @Override
@@ -51,7 +48,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    public void addAccount(Account account) {
+    public void addAccount(Accounts account) {
         ContentValues contentValues = new ContentValues();
         contentValues.put(COLUMN_USERNAME, account.getUsername());
         SQLiteDatabase db = getWritableDatabase();
@@ -71,9 +68,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 " WHERE " + COLUMN_USERID + "=\"" + userID + "\";");
     }
 
-    public Account getAccount() {
-        return null;
-    }
+    public Accounts getAccount() { return null; }
 
     // Debugging
     public String getDatabaseInfo() {
