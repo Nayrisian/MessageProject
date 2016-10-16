@@ -6,10 +6,10 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import uk.ac.solent.nayrisian.messageproject.database.tables.Accounts;
+import uk.ac.solent.nayrisian.messageproject.database.tables.Account;
 
-import static uk.ac.solent.nayrisian.messageproject.database.tables.Accounts.*;
-import static uk.ac.solent.nayrisian.messageproject.database.tables.Messages.*;
+import static uk.ac.solent.nayrisian.messageproject.database.tables.Account.*;
+import static uk.ac.solent.nayrisian.messageproject.database.tables.Message.*;
 
 /**
  * Singleton handler of the SQLite Android database system.
@@ -47,7 +47,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    public void addAccount(Accounts account) {
+    public void addAccount(Account account) {
         ContentValues contentValues = new ContentValues();
         contentValues.put(COLUMN_USERNAME, account.getUsername());
         SQLiteDatabase db = getWritableDatabase();
@@ -67,21 +67,40 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 " WHERE " + COLUMN_USERID + "=\"" + userID + "\";");
     }
 
-    public Accounts getAccount() { return null; }
+    public Account getAccount(String email) {
+        Account account;
+        SQLiteDatabase db = getWritableDatabase();
+        Cursor cursor = db.rawQuery("SELECT *" +
+                " FROM " + TABLE_ACCOUNTS +
+                " WHERE " + COLUMN_EMAIL + " = ?", new String[] { email });
+        if (cursor.moveToFirst()) {
+            do {
+                if (cursor.getString(cursor.getColumnIndex(COLUMN_USERID)) != null) {
+                    account = new Account(
+                            cursor.getInt(cursor.getColumnIndex(COLUMN_USERID)),
+                            cursor.getString(cursor.getColumnIndex(COLUMN_EMAIL)),
+                            cursor.getString(cursor.getColumnIndex(COLUMN_USERNAME)),
+                            cursor.getString(cursor.getColumnIndex(COLUMN_PASSWORD)));
+                    return account;
+                }
+            } while (cursor.moveToNext());
+        }
+        return null;
+    }
 
     // Debugging
     public String getDatabaseInfo() {
         String dbInfo = "";
-        getColumnInfo(TABLE_ACCOUNTS, COLUMN_USERID);
+        getColumnInfo(TABLE_ACCOUNTS, COLUMN_USERID, "1");
         return dbInfo;
     }
 
-    private String getColumnInfo(String table, String column) {
+    private String getColumnInfo(String table, String column, String condition) {
         SQLiteDatabase db = getWritableDatabase();
         String dbInfo = "";
         Cursor cursor = db.rawQuery("SELECT *" +
                 " FROM " + table +
-                " WHERE 1;", null);
+                " WHERE " + condition + ";", null);
         cursor.moveToFirst();
         while (!cursor.isAfterLast())
             if (cursor.getString(cursor.getColumnIndex(column)) != null)

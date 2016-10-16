@@ -9,6 +9,9 @@ import android.view.View;
 
 import uk.ac.solent.nayrisian.messageproject.R;
 
+/**
+ *
+ */
 public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {

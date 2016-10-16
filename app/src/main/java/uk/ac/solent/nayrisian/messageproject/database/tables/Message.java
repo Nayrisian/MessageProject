@@ -10,7 +10,7 @@ import uk.ac.solent.nayrisian.messageproject.Sender;
  * Created by Nayrisian on 15/10/2016.
  */
 
-public class Messages implements ITable {
+public class Message implements ITable {
     public static final String TABLE_MESSAGES = "messages",
             COLUMN_MESSAGEID = "_id",
             COLUMN_MESSAGE = "message",

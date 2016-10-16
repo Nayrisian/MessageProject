@@ -16,8 +16,7 @@ public class MD5 {
         final String MD5 = "MD5";
         try {
             // Create MD5 Hash
-            MessageDigest digest = java.security.MessageDigest
-                    .getInstance(MD5);
+            MessageDigest digest = java.security.MessageDigest.getInstance(MD5);
             digest.update(s.getBytes());
             byte messageDigest[] = digest.digest();
             // Create Hex String

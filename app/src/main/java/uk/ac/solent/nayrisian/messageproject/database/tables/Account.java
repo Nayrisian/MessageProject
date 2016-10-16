@@ -5,17 +5,17 @@ package uk.ac.solent.nayrisian.messageproject.database.tables;
  * Created by Nayrisian on 11/10/2016.
  */
 
-public class Accounts implements ITable {
+public class Account implements ITable {
     public static final String TABLE_ACCOUNTS = "accounts",
             COLUMN_USERID = "_id",
             COLUMN_EMAIL = "email",
             COLUMN_USERNAME = "username",
             COLUMN_PASSWORD = "password";
 
-    protected int _id;
-    protected String _email, _username, _password;
+    private int _id;
+    private String _email, _username, _password;
 
-    public Accounts(int id, String email, String username, String password) {
+    public Account(int id, String email, String username, String password) {
         _id = id;
         _email = email;
         _username = username;
