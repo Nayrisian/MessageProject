@@ -8,8 +8,17 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import uk.ac.solent.nayrisian.messageproject.database.tables.Account;
 
-import static uk.ac.solent.nayrisian.messageproject.database.tables.Account.*;
-import static uk.ac.solent.nayrisian.messageproject.database.tables.Message.*;
+import static uk.ac.solent.nayrisian.messageproject.database.tables.Account.COLUMN_EMAIL;
+import static uk.ac.solent.nayrisian.messageproject.database.tables.Account.COLUMN_PASSWORD;
+import static uk.ac.solent.nayrisian.messageproject.database.tables.Account.COLUMN_USERID;
+import static uk.ac.solent.nayrisian.messageproject.database.tables.Account.COLUMN_USERNAME;
+import static uk.ac.solent.nayrisian.messageproject.database.tables.Account.TABLE_ACCOUNTS;
+import static uk.ac.solent.nayrisian.messageproject.database.tables.Message.COLUMN_MESSAGE;
+import static uk.ac.solent.nayrisian.messageproject.database.tables.Message.COLUMN_MESSAGEID;
+import static uk.ac.solent.nayrisian.messageproject.database.tables.Message.COLUMN_RECEIVER;
+import static uk.ac.solent.nayrisian.messageproject.database.tables.Message.COLUMN_SENDER;
+import static uk.ac.solent.nayrisian.messageproject.database.tables.Message.COLUMN_TIME;
+import static uk.ac.solent.nayrisian.messageproject.database.tables.Message.TABLE_MESSAGES;
 
 /**
  * Singleton handler of the SQLite Android database system.
@@ -18,8 +27,8 @@ import static uk.ac.solent.nayrisian.messageproject.database.tables.Message.*;
  */
 
 public class DatabaseHandler extends SQLiteOpenHelper {
-    public static final int DATABASE_VERSION = 1;
-    public static final String DATABASE_NAME = "ams.db";
+    private static final int DATABASE_VERSION = 1;
+    private static final String DATABASE_NAME = "ams.db";
 
     public DatabaseHandler(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -55,10 +64,10 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.close();
     }
 
-    public void delAccount(String username) {
+    public void delAccount(String email) {
         SQLiteDatabase db = getWritableDatabase();
         db.execSQL("DELETE FROM " + TABLE_ACCOUNTS +
-                " WHERE " + COLUMN_USERNAME + "=\"" + username + "\";");
+                " WHERE " + COLUMN_EMAIL + "=\"" + email + "\";");
     }
 
     public void delAccount(int userID) {
@@ -68,8 +77,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
     public Account getAccount(String email) {
-        Account account;
         SQLiteDatabase db = getWritableDatabase();
+        Account account;
         Cursor cursor = db.rawQuery("SELECT *" +
                 " FROM " + TABLE_ACCOUNTS +
                 " WHERE " + COLUMN_EMAIL + " = ?", new String[] { email });
@@ -85,28 +94,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 }
             } while (cursor.moveToNext());
         }
-        return null;
-    }
-
-    // Debugging
-    public String getDatabaseInfo() {
-        String dbInfo = "";
-        getColumnInfo(TABLE_ACCOUNTS, COLUMN_USERID, "1");
-        return dbInfo;
-    }
-
-    private String getColumnInfo(String table, String column, String condition) {
-        SQLiteDatabase db = getWritableDatabase();
-        String dbInfo = "";
-        Cursor cursor = db.rawQuery("SELECT *" +
-                " FROM " + table +
-                " WHERE " + condition + ";", null);
-        cursor.moveToFirst();
-        while (!cursor.isAfterLast())
-            if (cursor.getString(cursor.getColumnIndex(column)) != null)
-                dbInfo += cursor.getString(cursor.getColumnIndex(column)) + "\n";
         cursor.close();
         db.close();
-        return dbInfo;
+        return null;
     }
 }
