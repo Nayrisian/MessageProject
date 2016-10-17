@@ -8,17 +8,8 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import uk.ac.solent.nayrisian.messageproject.database.tables.Account;
 
-import static uk.ac.solent.nayrisian.messageproject.database.tables.Account.COLUMN_EMAIL;
-import static uk.ac.solent.nayrisian.messageproject.database.tables.Account.COLUMN_PASSWORD;
-import static uk.ac.solent.nayrisian.messageproject.database.tables.Account.COLUMN_USERID;
-import static uk.ac.solent.nayrisian.messageproject.database.tables.Account.COLUMN_USERNAME;
-import static uk.ac.solent.nayrisian.messageproject.database.tables.Account.TABLE_ACCOUNTS;
-import static uk.ac.solent.nayrisian.messageproject.database.tables.Message.COLUMN_MESSAGE;
-import static uk.ac.solent.nayrisian.messageproject.database.tables.Message.COLUMN_MESSAGEID;
-import static uk.ac.solent.nayrisian.messageproject.database.tables.Message.COLUMN_RECEIVER;
-import static uk.ac.solent.nayrisian.messageproject.database.tables.Message.COLUMN_SENDER;
-import static uk.ac.solent.nayrisian.messageproject.database.tables.Message.COLUMN_TIME;
-import static uk.ac.solent.nayrisian.messageproject.database.tables.Message.TABLE_MESSAGES;
+import static uk.ac.solent.nayrisian.messageproject.database.tables.Account.*;
+import static uk.ac.solent.nayrisian.messageproject.database.tables.Message.*;
 
 /**
  * Singleton handler of the SQLite Android database system.
@@ -56,14 +47,18 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    public void addAccount(Account account) {
-        ContentValues contentValues = new ContentValues();
-        contentValues.put(COLUMN_USERNAME, account.getUsername());
+    public long addAccount(String email, String username, String password) {
         SQLiteDatabase db = getWritableDatabase();
-        db.insert(TABLE_ACCOUNTS, null, contentValues);
+        ContentValues contentValues = new ContentValues();
+        long success;
+        contentValues.put(COLUMN_EMAIL, email);
+        contentValues.put(COLUMN_USERNAME, username);
+        contentValues.put(COLUMN_PASSWORD, password);
+        success = db.insert(TABLE_ACCOUNTS, null, contentValues);
         db.close();
+        return success;
     }
-
+/*
     public void delAccount(String email) {
         SQLiteDatabase db = getWritableDatabase();
         db.execSQL("DELETE FROM " + TABLE_ACCOUNTS +
@@ -75,7 +70,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.execSQL("DELETE FROM " + TABLE_ACCOUNTS +
                 " WHERE " + COLUMN_USERID + "=\"" + userID + "\";");
     }
-
+*/
     public Account getAccount(String email) {
         SQLiteDatabase db = getWritableDatabase();
         Account account;

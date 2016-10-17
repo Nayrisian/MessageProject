@@ -42,15 +42,22 @@ import static android.Manifest.permission.READ_CONTACTS;
  * A login screen that offers login via email/password.
  */
 public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<Cursor> {
-    private DatabaseHandler dbHandler = new DatabaseHandler(this);
     /**
      * Id to identity READ_CONTACTS permission request.
      */
     private static final int REQUEST_READ_CONTACTS = 0;
     /**
+     * Database handler - Handle all requests here.
+     */
+    private DatabaseHandler dbHandler = new DatabaseHandler(this);
+    /**
      * Keep track of the login task to ensure we can cancel it if requested.
      */
     private UserLoginTask mAuthTask = null;
+    /**
+     * If true, Auth will attempt to login, otherwise register then login.
+     */
+    private boolean mLogin = true;
 
     // UI references.
     private AutoCompleteTextView mEmailView;
@@ -91,21 +98,17 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     }
 
     private void populateAutoComplete() {
-        if (!mayRequestContacts()) {
+        if (!mayRequestContacts())
             return;
-        }
-
         getLoaderManager().initLoader(0, null, this);
     }
 
     private boolean mayRequestContacts() {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M)
             return true;
-        }
-        if (checkSelfPermission(READ_CONTACTS) == PackageManager.PERMISSION_GRANTED) {
+        if (checkSelfPermission(READ_CONTACTS) == PackageManager.PERMISSION_GRANTED)
             return true;
-        }
-        if (shouldShowRequestPermissionRationale(READ_CONTACTS)) {
+        if (shouldShowRequestPermissionRationale(READ_CONTACTS))
             Snackbar.make(mEmailView, R.string.permission_rationale, Snackbar.LENGTH_INDEFINITE)
                     .setAction(android.R.string.ok, new View.OnClickListener() {
                         @Override
@@ -114,9 +117,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                             requestPermissions(new String[]{READ_CONTACTS}, REQUEST_READ_CONTACTS);
                         }
                     });
-        } else {
+        else
             requestPermissions(new String[]{READ_CONTACTS}, REQUEST_READ_CONTACTS);
-        }
         return false;
     }
 
@@ -126,11 +128,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
-        if (requestCode == REQUEST_READ_CONTACTS) {
-            if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+        if (requestCode == REQUEST_READ_CONTACTS)
+            if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
                 populateAutoComplete();
-            }
-        }
     }
 
 
@@ -140,9 +140,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      * errors are presented and no actual login attempt is made.
      */
     private void attemptLogin() {
-        if (mAuthTask != null) {
+        if (mAuthTask != null)
             return;
-        }
 
         // Reset errors.
         mEmailView.setError(null);
@@ -173,11 +172,11 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             cancel = true;
         }
 
-        if (cancel) {
+        if (cancel)
             // There was an error; don't attempt login and focus the first
             // form field with an error.
             focusView.requestFocus();
-        } else {
+        else {
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
             showProgress(true);
@@ -291,17 +290,37 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
         private final String mEmail;
         private final String mPassword;
+        private final String mUsername;
 
         UserLoginTask(String email, String password) {
             mEmail = email;
             mPassword = password;
+            mUsername = "";
+        }
+
+        UserLoginTask(String email, String password, String username) {
+            mEmail = email;
+            mPassword = password;
+            mUsername = username;
         }
 
         @Override
         protected Boolean doInBackground(Void... params) {
-            String password = MD5.hash(mPassword);
-            Account account = dbHandler.getAccount(mEmail);
-            return account != null && account.getPassword().equals(password);
+            if (mLogin) {
+                // Get hash value of password.
+                String password = MD5.hash(mPassword);
+                // Get account associated with input email.
+                Account account = dbHandler.getAccount(mEmail);
+                // Check first if Account exists, and then if password hashes match. (Passwords are stored as hash values)
+                return account != null && account.getPassword().equals(password);
+            } else {
+                // Do register
+                if (dbHandler.getAccount(mEmail) == null) {
+                    // Accounts don't exist.
+                    return dbHandler.addAccount(mEmail, mUsername, mPassword) != -1;
+                }
+            }
+            return false;
         }
 
         @Override
@@ -325,4 +344,3 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         }
     }
 }
-
