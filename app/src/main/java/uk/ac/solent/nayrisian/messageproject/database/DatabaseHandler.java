@@ -5,8 +5,10 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.widget.Toast;
 
 import uk.ac.solent.nayrisian.messageproject.database.tables.Account;
+import uk.ac.solent.nayrisian.messageproject.encryption.MD5;
 
 import static uk.ac.solent.nayrisian.messageproject.database.tables.Account.*;
 import static uk.ac.solent.nayrisian.messageproject.database.tables.Message.*;
@@ -27,17 +29,17 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL("CREATE TABLE " + TABLE_ACCOUNTS + "(" +
-                COLUMN_USERID + " INTEGER PRIMARY KEY AUTOINCREMENT " +
-                COLUMN_EMAIL + " TEXT " +
-                COLUMN_USERNAME + " TEXT " +
-                COLUMN_PASSWORD + " TEXT " + ");");
-        db.execSQL("CREATE TABLE " + TABLE_MESSAGES + "(" +
-                COLUMN_MESSAGEID + " INTEGER PRIMARY KEY AUTOINCREMENT " +
-                COLUMN_MESSAGE + " TEXT " +
-                COLUMN_SENDER + " TEXT " +
-                COLUMN_RECEIVER + " TEXT " +
-                COLUMN_TIME + " TIME " + ");");
+        db.execSQL("CREATE TABLE IF NOT EXISTS " + TABLE_ACCOUNTS + " (" +
+                COLUMN_USERID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                COLUMN_EMAIL + " TEXT, " +
+                COLUMN_USERNAME + " TEXT, " +
+                COLUMN_PASSWORD + " TEXT" + ");");
+        db.execSQL("CREATE TABLE IF NOT EXISTS " + TABLE_MESSAGES + " (" +
+                COLUMN_MESSAGEID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                COLUMN_MESSAGE + " TEXT, " +
+                COLUMN_SENDER + " TEXT, " +
+                COLUMN_RECEIVER + " TEXT, " +
+                COLUMN_TIME + " TIME" + ");");
     }
 
     @Override
@@ -53,7 +55,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         long success;
         contentValues.put(COLUMN_EMAIL, email);
         contentValues.put(COLUMN_USERNAME, username);
-        contentValues.put(COLUMN_PASSWORD, password);
+        contentValues.put(COLUMN_PASSWORD, MD5.hash(password));
         success = db.insert(TABLE_ACCOUNTS, null, contentValues);
         db.close();
         return success;
@@ -64,13 +66,19 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.execSQL("DELETE FROM " + TABLE_ACCOUNTS +
                 " WHERE " + COLUMN_EMAIL + "=\"" + email + "\";");
     }
-
-    public void delAccount(int userID) {
-        SQLiteDatabase db = getWritableDatabase();
-        db.execSQL("DELETE FROM " + TABLE_ACCOUNTS +
-                " WHERE " + COLUMN_USERID + "=\"" + userID + "\";");
-    }
 */
+    public boolean delAccount(int userID, Context context) {
+        SQLiteDatabase db = getWritableDatabase();
+        try {
+            db.execSQL("DELETE FROM " + TABLE_ACCOUNTS +
+                    " WHERE " + COLUMN_USERID + "=\"" + userID + "\";");
+            return true;
+        } catch (Exception ex) {
+            Toast.makeText(context, "SQL failed.", Toast.LENGTH_LONG).show();
+            return false;
+        }
+    }
+
     public Account getAccount(String email) {
         SQLiteDatabase db = getWritableDatabase();
         Account account;

@@ -27,6 +27,7 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -65,10 +66,13 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private EditText _txtPassword;
     private View _viewProgress;
     private View _viewLoginForm;
+    private Button mEmailSignInButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
         setContentView(R.layout.activity_login);
         // Set up the login form.
         _txtEmail = (AutoCompleteTextView) findViewById(R.id.email);
@@ -88,7 +92,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             }
         });
 
-        Button mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
+        mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
         mEmailSignInButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -329,7 +333,10 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 Account account = _dbHandler.getAccount(mEmail);
                 // Check first if Account exists, and then if password hashes match. (Passwords are stored as hash values)
                 if (account != null)
-                    return account.getPassword().equals(password);
+                    if (account.getPassword().equals(password)) {
+                        Toast.makeText(getBaseContext(), "Logging in.", Toast.LENGTH_LONG).show();
+                        return true;
+                    }
                 else
                     _login = false;
             } else
@@ -344,13 +351,16 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         protected void onPostExecute(final Boolean success) {
             _authTask = null;
             showProgress(false);
-
             if (success) {
                 Intent intent = new Intent(getBaseContext(), MainActivity.class);
                 startActivity(intent);
+                finish();
             } else {
                 if (!_login) {
+                    mEmailSignInButton.setText(getString(R.string.action_register));
                     _txtUsername.setVisibility(View.VISIBLE);
+                    _txtUsername.requestFocus();
+                    Toast.makeText(getBaseContext(), "Account not found.", Toast.LENGTH_LONG).show();
                 } else {
                     _txtPassword.setError(getString(R.string.error_incorrect_password));
                     _txtPassword.requestFocus();
