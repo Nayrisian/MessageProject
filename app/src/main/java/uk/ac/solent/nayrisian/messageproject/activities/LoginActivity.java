@@ -330,15 +330,16 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 // Get hash value of password.
                 String password = MD5.hash(mPassword);
                 // Get account associated with input email.
-                Account account = _dbHandler.getAccount(mEmail);
+                    Account account = _dbHandler.getAccount(mEmail);
                 // Check first if Account exists, and then if password hashes match. (Passwords are stored as hash values)
-                if (account != null)
+                if (account != null) {
                     if (account.getPassword().equals(password)) {
                         Toast.makeText(getBaseContext(), "Logging in.", Toast.LENGTH_LONG).show();
                         return true;
                     }
-                else
+                } else {
                     _login = false;
+                }
             } else
                 // Do register
                 if (_dbHandler.getAccount(mEmail) == null)
