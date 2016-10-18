@@ -1,4 +1,4 @@
-package uk.ac.solent.nayrisian.messageproject.database.tables;
+package uk.ac.solent.nayrisian.messageproject.database.table;
 
 /**
  * Interface for Database tables - Identifies classes as being tables.

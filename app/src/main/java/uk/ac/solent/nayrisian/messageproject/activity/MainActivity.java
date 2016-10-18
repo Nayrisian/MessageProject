@@ -1,4 +1,4 @@
-package uk.ac.solent.nayrisian.messageproject.activities;
+package uk.ac.solent.nayrisian.messageproject.activity;
 
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;

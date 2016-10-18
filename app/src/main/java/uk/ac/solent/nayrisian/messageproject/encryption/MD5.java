@@ -14,6 +14,7 @@ public class MD5 {
     @NonNull
     public static String hash(final String s) {
         final String MD5 = "MD5";
+
         try {
             // Create MD5 Hash
             MessageDigest digest = java.security.MessageDigest.getInstance(MD5);

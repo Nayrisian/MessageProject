@@ -1,4 +1,4 @@
-package uk.ac.solent.nayrisian.messageproject.database.tables;
+package uk.ac.solent.nayrisian.messageproject.database.table;
 
 import java.sql.Time;
 

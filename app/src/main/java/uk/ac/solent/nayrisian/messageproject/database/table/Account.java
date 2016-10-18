@@ -1,4 +1,4 @@
-package uk.ac.solent.nayrisian.messageproject.database.tables;
+package uk.ac.solent.nayrisian.messageproject.database.table;
 
 /**
  * Represents fields within a column, as well as the overall column structure.
@@ -52,5 +52,10 @@ public class Account implements ITable {
 
     public void setPassword(String password) {
         _password = password;
+    }
+
+    public Boolean isValid() {
+        return getID() > 0 && !getEmail().isEmpty() &&
+                !getUsername().isEmpty() && !getPassword().isEmpty();
     }
 }

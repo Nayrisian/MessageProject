@@ -7,11 +7,11 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.widget.Toast;
 
-import uk.ac.solent.nayrisian.messageproject.database.tables.Account;
+import uk.ac.solent.nayrisian.messageproject.database.table.Account;
 import uk.ac.solent.nayrisian.messageproject.encryption.MD5;
 
-import static uk.ac.solent.nayrisian.messageproject.database.tables.Account.*;
-import static uk.ac.solent.nayrisian.messageproject.database.tables.Message.*;
+import static uk.ac.solent.nayrisian.messageproject.database.table.Account.*;
+import static uk.ac.solent.nayrisian.messageproject.database.table.Message.*;
 
 /**
  * Singleton handler of the SQLite Android database system.
@@ -85,6 +85,29 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         Cursor cursor = db.rawQuery("SELECT *" +
                 " FROM " + TABLE_ACCOUNTS +
                 " WHERE " + COLUMN_EMAIL + " = ?", new String[] { email });
+        if (cursor.moveToFirst()) {
+            do {
+                if (cursor.getString(cursor.getColumnIndex(COLUMN_USERID)) != null) {
+                    account = new Account(
+                            cursor.getInt(cursor.getColumnIndex(COLUMN_USERID)),
+                            cursor.getString(cursor.getColumnIndex(COLUMN_EMAIL)),
+                            cursor.getString(cursor.getColumnIndex(COLUMN_USERNAME)),
+                            cursor.getString(cursor.getColumnIndex(COLUMN_PASSWORD)));
+                    return account;
+                }
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        db.close();
+        return null;
+    }
+
+    public Account getAccount(long rowID) {
+        SQLiteDatabase db = getWritableDatabase();
+        Account account;
+        Cursor cursor = db.rawQuery("SELECT *" +
+                " FROM " + TABLE_ACCOUNTS +
+                " WHERE " + COLUMN_USERID + " = ?", new String[] { String.valueOf(rowID) });
         if (cursor.moveToFirst()) {
             do {
                 if (cursor.getString(cursor.getColumnIndex(COLUMN_USERID)) != null) {
