@@ -49,6 +49,11 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         onCreate(db);
     }
 
+    public Cursor displayTable() {
+        SQLiteDatabase db = getWritableDatabase();
+        return db.rawQuery("SELECT * FROM " + TABLE_ACCOUNTS, null);
+    }
+
     public long addAccount(String email, String username, String password) {
         SQLiteDatabase db = getWritableDatabase();
         ContentValues contentValues = new ContentValues();

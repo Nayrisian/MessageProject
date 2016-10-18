@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.app.LoaderManager.LoaderCallbacks;
 
@@ -66,6 +67,7 @@ public class AuthActivity extends AppCompatActivity implements LoaderCallbacks<C
     private EditText _txtUsername;
     private EditText _txtPassword;
     private Button _btnAuth;
+    private Button _btnViewAll;
     private View mProgressView;
     private View mLoginFormView;
 
@@ -149,8 +151,38 @@ public class AuthActivity extends AppCompatActivity implements LoaderCallbacks<C
             }
         });
 
+        _btnViewAll = (Button) findViewById(R.id.btnViewAll);
+        _btnViewAll.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Cursor cursor = _dbHandler.displayTable();
+                if (cursor.getCount() == 0) {
+                    // Display message??
+                    showMessage("Error", "No data.");
+                    return;
+                }
+                StringBuffer buffer = new StringBuffer();
+                while (cursor.moveToNext()) {
+                    buffer.append("ID : " + cursor.getString(0) + "\n");
+                    buffer.append("Email : " + cursor.getString(1) + "\n");
+                    buffer.append("User : " + cursor.getString(2) + "\n");
+                    buffer.append("Pass : " + cursor.getString(3) + "\n\n");
+                }
+                // Show all data.
+                showMessage("Data", buffer.toString());
+            }
+        });
+
         mLoginFormView = findViewById(R.id.login_auth_form);
         mProgressView = findViewById(R.id.login_progress);
+    }
+
+    public void showMessage(String title, String message) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setCancelable(true);
+        builder.setTitle(title);
+        builder.setMessage(message);
+        builder.show();
     }
 
     private void populateAutoComplete() {
