@@ -157,18 +157,16 @@ public class AuthActivity extends AppCompatActivity implements LoaderCallbacks<C
             public void onClick(View view) {
                 Cursor cursor = _dbHandler.displayTable();
                 if (cursor.getCount() == 0) {
-                    // Display message??
                     showMessage("Error", "No data.");
                     return;
                 }
-                StringBuffer buffer = new StringBuffer();
+                StringBuilder buffer = new StringBuilder();
                 while (cursor.moveToNext()) {
                     buffer.append("ID : " + cursor.getString(0) + "\n");
                     buffer.append("Email : " + cursor.getString(1) + "\n");
                     buffer.append("User : " + cursor.getString(2) + "\n");
                     buffer.append("Pass : " + cursor.getString(3) + "\n\n");
                 }
-                // Show all data.
                 showMessage("Data", buffer.toString());
             }
         });
