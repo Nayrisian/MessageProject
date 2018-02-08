@@ -1,0 +1,39 @@
+<resources>
+    <!-- General application strings -->
+    <string name="app_name">Tau Chat</string>
+    <string name="permission_rationale">"Contacts permissions are needed for providing email
+        completions."
+    </string>
+    <string name="hint_theme">Change theme:</string>
+    <!-- Auth activity strings -->
+    <string name="title_activity_auth_sign_in">Sign in</string>
+    <string name="title_activity_auth_register">Register</string>
+    <string name="hint_email">Email</string>
+    <string name="hint_password">Password</string>
+    <string name="hint_username">Username</string>
+    <string name="action_sign_in">Sign in</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="action_register">Register</string>
+    <string name="action_register_short">Register</string>
+    <string name="error_invalid_email">This email address is invalid</string>
+    <string name="error_invalid_password">This password is too short</string>
+    <string name="error_invalid_username">This username is too short</string>
+    <string name="error_incorrect_password">This password is incorrect</string>
+    <string name="error_field_required">This field is required</string>
+    <!-- Main activity strings -->
+    <string name="title_activity_main">Profile</string>
+    <string name="text_layout_contacts">Contacts</string>
+    <!-- Contact activity strings -->
+    <string name="title_activity_contact">Contact</string>
+    <string name="hint_search_id">ID</string>
+    <string name="hint_search_email">Email</string>
+    <string name="hint_search_username">Username</string>
+    <string name="action_contact_add">Add Contact</string>
+    <string name="action_search">Search</string>
+    <string name="action_search_close">Back</string>
+    <!-- Chat activity strings -->
+    <string name="title_activity_chat">Chat</string>
+    <string name="hint_message_input">Send message&#8230;</string>
+    <string name="action_message_send">Send</string>
+    <!-- Debug application strings -->
+</resources>

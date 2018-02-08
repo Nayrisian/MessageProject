@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Primary colour (Yellow) -->
+    <color name="colorPrimary">#cddc39</color>
+    <color name="colorPrimaryDark">#ffe082</color>
+    <!-- Secondary colour (Blue) -->
+    <color name="colorSecondary">#039be5</color>
+    <color name="colorSecondaryDark">#7986cb</color>
+    <!-- Tertiary colour (Red) -->
+    <color name="colorAccent">#ef5350</color>
+    <color name="colorAccentDark">#ef5350</color>
+    <!-- Background colour (White/Black) -->
+    <color name="colorBackground">#cfd8dc</color>
+    <color name="colorBackgroundDark">#263238</color>
+    <!-- Miscellaneous colour -->
+    <color name="colorButtonForeground">#afb42b</color>
+    <color name="colorButtonBackground">#b6000d0e</color>
+    <color name="black_overlay">#000000</color>
+</resources>
